@@ -236,26 +236,25 @@ footer p { margin: 0; }
 .phase-one .lp-accessories { padding-right:23vw; }
 .phase-one .accessory-dock { position:absolute; inset:0 0 0 auto; width:15vw; background:#292b2b; pointer-events:none; }
 .phase-one .dock-rule { position:absolute; top:66%; left:10%; width:80%; height:1px; background:#bc9d60; }
-.phase-one .lp-audience { overflow:hidden; isolation:isolate; }
-.phase-one .audience-age { position:absolute; left:-8%; top:50%; transform:translateY(-50%); font-size:clamp(15rem,42vw,60rem); font-weight:800; line-height:.8; letter-spacing:-.1em; white-space:nowrap; color:#1c1e1f; user-select:none; z-index:-1; }
+.phase-one .lp-audience { overflow:hidden; isolation:isolate; padding-top:340px; padding-bottom:140px; min-height:115svh; }
+.phase-one .audience-age { position:absolute; right:4vw; top:50%; transform:translateY(-50%); font-size:clamp(120px,11vw,180px); font-weight:800; line-height:.8; letter-spacing:-.045em; white-space:nowrap; color:#eeeee9; opacity:.045; pointer-events:none; user-select:none; z-index:0; }
+.phase-one .audience-copy { position:relative; z-index:2; background:#101112; width:min(48%,660px); }
 .phase-one .story-stage { position:relative; background:#0c0d0e; }
 .phase-one .mvv { display:block; padding:70px 14vw; }
 .phase-one .mvv-panel { min-height:65svh; position:relative; display:flex; flex-direction:column; justify-content:center; }
 .phase-one .mvv h2.mvv-word { font-size:clamp(1rem,2vw,1.5rem); color:#bc9d60; letter-spacing:.12em; margin:0 0 32px; }
 .phase-one .mvv-content h3 { font-family:Arial,Helvetica,sans-serif; font-size:clamp(2rem,5.5vw,6rem); font-weight:700; letter-spacing:-.055em; line-height:1.06; margin-bottom:30px; }
 .phase-one .mvv-content p { color:#b9bab7; font-size:clamp(1rem,1.3vw,1.2rem); line-height:1.7; max-width:540px; }
-.phase-one .mvv-mobile-line { position:absolute; top:8%; bottom:8%; left:9vw; width:1px; background:#bc9d60; }
+.phase-one .mvv-guide { position:absolute; top:8%; bottom:8%; left:9vw; width:1px; background:#bc9d60; }
 .phase-one .lp-business { display:block; padding:90px 0 60px; border:0; }
 .phase-one .lp-business .business-label { font-size:.8rem; letter-spacing:.2em; margin:0 7vw; font-weight:400; }
-.phase-one .business-diagram { position:relative; width:100%; height:clamp(350px,60vw,600px); transform-origin:center; }
-.phase-one .business-connections { position:absolute; inset:0; width:100%; height:100%; overflow:visible; color:#bc9d60; }
-.phase-one .business-connections > path,.phase-one #handoff-line { stroke:#bc9d60; stroke-width:1; fill:none; vector-effect:non-scaling-stroke; }
-.phase-one .business-node { position:absolute; width:22%; min-height:10%; display:flex; align-items:center; justify-content:center; border:1px solid #777366; text-align:center; font-size:clamp(.7rem,1.2vw,1rem); letter-spacing:.04em; padding:8px 4px; transform:translate(-50%,-50%); }
-.phase-one .node-supplier { left:15%; top:40%; }
-.phase-one .node-facility { left:51%; top:40%; color:#bc9d60; }
-.phase-one .node-client { left:87%; top:40%; }
-.phase-one .node-stock { left:36%; top:73.333333%; width:26%; }
-.phase-one .node-drop { left:66%; top:73.333333%; width:26%; }
+.phase-one .business-diagram { position:relative; width:86%; max-width:1200px; margin:35px auto; aspect-ratio:2; transform-origin:center; }
+.phase-one .business-connections { display:block; width:100%; height:100%; overflow:hidden; }
+.phase-one .flow-path { stroke:#bc9d60; stroke-width:1.25; fill:none; stroke-linecap:round; stroke-linejoin:round; }
+.phase-one .business-node rect { fill:#0c0d0e; stroke:#777366; stroke-width:1.25; }
+.phase-one .business-node text { fill:#eeeee9; font:500 20px Arial,Helvetica,sans-serif; text-anchor:middle; dominant-baseline:middle; letter-spacing:.4px; }
+.phase-one .node-facility rect { stroke:#bc9d60; }
+.phase-one .node-facility text { fill:#bc9d60; font-weight:700; }
 .phase-one .business-explanation { margin:0 7vw; max-width:800px; color:#b9bab7; font-size:1rem; line-height:1.7; }
 .phase-one .business-explanation .lp-small { font-size:.875rem; }
 .phase-one .capital-distribution { margin:45px 0; width:min(80vw,900px); }
@@ -270,16 +269,19 @@ footer p { margin: 0; }
 .phase-one .lp-final .lp-copy { max-width:1300px; width:100%; }
 .phase-one .lp-final h2 { font-size:clamp(2.7rem,7.6vw,9rem); max-width:1100px; }
 .phase-one .lp-final-rule { height:1px; background:#bc9d60; margin-bottom:60px; transform-origin:left; }
-/* One shared pinned surface: no spacer or element swap at the MVV/model boundary. */
+/* One pin, two isolated scenes. MVV clears before the diagram begins. */
 @media(min-width:769px) {
  .phase-one .story-stage.is-cinematic { height:100svh; min-height:600px; }
  .phase-one .is-cinematic .mvv,.phase-one .is-cinematic .lp-business { position:absolute; inset:0; min-height:0; height:100%; padding:0; }
  .phase-one .is-cinematic .mvv { z-index:2; pointer-events:none; }
- .phase-one .is-cinematic .mvv-mobile-line { display:none; }
+ .phase-one .is-cinematic .mvv-guide { left:50%; top:14%; bottom:14%; opacity:.3; transform-origin:top; }
+ .phase-one .is-cinematic #modelo:not(.is-model-active) { display:none; }
+ .phase-one .is-cinematic #modelo:not(.is-model-active),
+ .phase-one .is-cinematic #modelo:not(.is-model-active) * { visibility:hidden!important; pointer-events:none!important; }
  .phase-one .is-cinematic .mvv-panel { position:absolute; inset:0; min-height:0; display:block; }
  .phase-one .is-cinematic .mvv-word { position:absolute; left:50%; top:42%; font-size:clamp(2.6rem,7vw,7rem); line-height:1; letter-spacing:-.04em; margin:0; white-space:nowrap; }
  .phase-one .is-cinematic .mvv-content { position:absolute; left:18%; top:38%; width:72%; }
- .phase-one .is-cinematic .business-diagram { position:absolute; inset:0; height:100%; }
+ .phase-one .is-cinematic .business-diagram { position:absolute; top:25%; left:7%; width:86%; max-width:none; height:48%; margin:0; }
  .phase-one .is-cinematic .business-label { position:absolute; top:17%; left:7%; margin:0; }
  .phase-one .is-cinematic .business-explanation { position:absolute; top:82%; left:7%; right:7%; margin:0; max-width:1100px; font-size:.9rem; line-height:1.5; }
  .phase-one .is-cinematic .business-explanation .lp-small { font-size:.75rem; }
@@ -287,18 +289,20 @@ footer p { margin: 0; }
 @media(max-width:768px) {
  .phase-one .lp-accessories { padding-right:23vw; }
  .phase-one .lp-accessories h2 { font-size:clamp(2rem,5.8vw,3rem); }
- .phase-one .audience-age { font-size:48vw; left:-10%; }
+ .phase-one .lp-audience { padding-top:300px; padding-bottom:110px; min-height:100svh; }
+ .phase-one .audience-age { font-size:clamp(80px,16vw,120px); right:4vw; top:160px; transform:none; }
+ .phase-one .audience-copy { width:100%; }
  .phase-one .mvv { padding:50px 7vw 50px 14vw; }
  .phase-one .mvv-panel { min-height:65svh; }
  .phase-one .lp-business { padding:80px 0 60px; }
- .phase-one .business-node { font-size:clamp(.6875rem,1.6vw,.875rem); letter-spacing:0; }
+ .phase-one .business-diagram { width:88%; max-width:500px; aspect-ratio:400 / 650; }
+ .phase-one .business-node text { font-size:16px; letter-spacing:0; }
  .phase-one .business-explanation { margin-top:20px; }
  .phase-one .capital-distribution { width:100%; }
  .phase-one .capital-labels { grid-template-columns:1fr 1fr 1fr; gap:12px; }
  .phase-one .capital-labels dt { font-size:.75rem; }
 }
 @media(prefers-reduced-motion:reduce) {
- .phase-one .audience-age { transform:translateY(-50%)!important; }
  .phase-one .flow-path { stroke-dashoffset:0!important; }
  .phase-one .accessory-dock { clip-path:none!important; }
 }
@@ -307,3 +311,7 @@ footer p { margin: 0; }
 .phase-one .lp-object-canvas { position:absolute; inset:0; display:block; width:100%; height:100%; pointer-events:none; opacity:0; z-index:1; }
 .phase-one .lp-object-stage:not(.is-persistent) { position:relative; overflow:hidden; }
 .phase-one .lp-object-stage .lp-weight { pointer-events:none; }
+
+/* The visible branch is continuous; only its reveal mask is segmented. */
+.phase-one .branch-geometry { fill:none; stroke:#bc9d60; stroke-width:1.25; stroke-linecap:round; stroke-linejoin:round; }
+.phase-one #branch-reveal .flow-path { stroke:white; stroke-width:24; marker-end:none!important; }

@@ -1,51 +1,59 @@
 import * as THREE from './vendor/three.module.min.js';
 
-// Original procedural asset. Replace this factory with a licensed, normalized GLB
-// group later; the camera, renderer and GSAP narrative do not need to change.
-export function createHexDumbbell() {
-  const model = new THREE.Group();
-  model.name = 'FacilityGym-Hex-Dumbbell';
-  const data = new Uint8Array(64 * 128 * 4);
-  for (let y=0;y<128;y++) for (let x=0;x<64;x++) {
-    const i=(y*64+x)*4;
-    const value=232+Math.round(12*Math.sin(y*2.37)+3*Math.sin(x*.16+y));
-    data[i]=data[i+1]=data[i+2]=value; data[i+3]=255;
-  }
-  const brushed = new THREE.DataTexture(data,64,128,THREE.RGBAFormat);
-  brushed.wrapS=brushed.wrapT=THREE.RepeatWrapping;
-  brushed.needsUpdate=true;
-  const headMaterial = new THREE.MeshStandardMaterial({ color:0x292c2e, metalness:.9, roughness:.65, roughnessMap:brushed, bumpMap:brushed, bumpScale:.003 });
-  const shaftMaterial = new THREE.MeshStandardMaterial({ color:0x666a6c, metalness:.9, roughness:.4, roughnessMap:brushed, bumpMap:brushed, bumpScale:.0015 });
-  const goldMaterial = new THREE.MeshStandardMaterial({ color:0xbc9d60, metalness:.98, roughness:.28 });
-  const shape = new THREE.Shape();
-  for(let i=0;i<6;i++) {
-    const angle=Math.PI/6+i*Math.PI/3;
-    const x=Math.cos(angle)*.48,y=Math.sin(angle)*.48;
-    if(i===0) shape.moveTo(x,y); else shape.lineTo(x,y);
-  }
-  shape.closePath();
-  const headGeometry = new THREE.ExtrudeGeometry(shape,{ depth:.36, bevelEnabled:true, bevelThickness:.02, bevelSize:.02, bevelSegments:3, steps:1, curveSegments:1 });
-  headGeometry.translate(0,0,-.18);
-  headGeometry.rotateY(Math.PI/2);
-  for(const sign of [-1,1]) {
-    const head=new THREE.Mesh(headGeometry,headMaterial);
-    head.name=sign<0?'head-left':'head-right'; head.position.x=sign*1.6; model.add(head);
-  }
-  const shaftGeometry=new THREE.CylinderGeometry(1/4.8,1/4.8,2.82,32,1);
-  shaftGeometry.rotateZ(Math.PI/2);
-  const shaft=new THREE.Mesh(shaftGeometry,shaftMaterial);shaft.name='shaft';model.add(shaft);
-  const ringGeometry=new THREE.CylinderGeometry(.229,.229,.035,32,1);
-  ringGeometry.rotateZ(Math.PI/2);
-  for(const sign of [-1,1]) {
-    const ring=new THREE.Mesh(ringGeometry,goldMaterial);
-    ring.name=sign<0?'gold-ring-left':'gold-ring-right';ring.position.x=sign*1.387;model.add(ring);
-  }
-  model.userData.materials=[headMaterial,shaftMaterial,goldMaterial];
-  model.userData.dispose=() => {
-    headGeometry.dispose();shaftGeometry.dispose();ringGeometry.dispose();
-    model.userData.materials.forEach(material=>material.dispose());brushed.dispose();
-  };
-  return model;
+import { GLTFLoader } from './vendor/GLTFLoader.js';
+
+export const DUMBBELL_URL = new URL('./assets/facilitygym_dumbbell.glb', import.meta.url);
+const requiredParts = ['Dumbbell_Bar','Dumbbell_Grip','Dumbbell_Head_L','Dumbbell_Head_R','Dumbbell_Ring_L','Dumbbell_Ring_R'];
+const requiredMaterials = ['MAT_steel_bar','MAT_grip','MAT_rubber_head','MAT_gold_ring'];
+
+function disposeGLTF(root) {
+  const geometries=new Set(),materials=new Set(),textures=new Set();
+  root.traverse(node=>{if(node.isMesh){geometries.add(node.geometry);for(const material of [].concat(node.material))materials.add(material);}});
+  materials.forEach(material=>{for(const value of Object.values(material))if(value?.isTexture)textures.add(value);});
+  geometries.forEach(value=>value.dispose());textures.forEach(value=>value.dispose());materials.forEach(value=>value.dispose());
+}
+
+// No geometry is created, rebuilt, decimated or transformed. The authored root
+// is the actor. Its local center is compensated in its position every frame.
+export function prepareDumbbell(gltf) {
+  const root=gltf.scene.getObjectByName('Dumbbell_Root');
+  try {
+    if(!root)throw new Error('Dumbbell_Root not found');
+    for(const name of requiredParts)if(!root.getObjectByName(name)?.isMesh)throw new Error('Missing GLB part: '+name);
+    const materials=new Set();let triangles=0;
+    root.traverse(node=>{if(node.isMesh){[].concat(node.material).forEach(material=>materials.add(material));triangles+=(node.geometry.index?.count||node.geometry.attributes.position.count)/3;}});
+    for(const name of requiredMaterials)if(![...materials].some(material=>material.name===name))throw new Error('Missing GLB material: '+name);
+    root.removeFromParent();root.position.set(0,0,0);root.updateMatrixWorld(true);
+    const box=new THREE.Box3().setFromObject(root);
+    root.userData.localCenter=box.getCenter(new THREE.Vector3());
+    root.userData.baseWidth=box.max.x-box.min.x;
+    if(!(root.userData.baseWidth>0))throw new Error('Empty GLB bounds');
+    // Small unbaked grip microtexture only. Original colors/material identities stay.
+    const pixels=new Uint8Array(64*64*4);
+    for(let y=0;y<64;y++)for(let x=0;x<64;x++){
+      const i=(y*64+x)*4,value=128+Math.round(15*Math.sin((x+y)*Math.PI/4)*Math.sin((x-y)*Math.PI/4));
+      pixels[i]=pixels[i+1]=pixels[i+2]=value;pixels[i+3]=255;
+    }
+    const micro=new THREE.DataTexture(pixels,64,64,THREE.RGBAFormat);
+    micro.wrapS=micro.wrapT=THREE.RepeatWrapping;micro.repeat.set(6,2);micro.needsUpdate=true;
+    materials.forEach(material=>{
+      material.emissive?.set(0x000000);
+      if(material.name==='MAT_grip'){material.bumpMap=micro;material.bumpScale=root.userData.baseWidth*.00035;}
+      if(material.name==='MAT_rubber_head')material.roughness=.78;
+      if(material.name==='MAT_gold_ring')material.roughness=.34;
+    });
+    root.userData.materials=[...materials];root.userData.triangles=triangles;
+    root.userData.dispose=()=>disposeGLTF(root);
+    return root;
+  }catch(error){disposeGLTF(root||gltf.scene);throw error;}
+}
+
+export async function loadDumbbell(url=DUMBBELL_URL,signal) {
+  const response=await fetch(url,{signal});
+  if(!response.ok)throw new Error('GLB HTTP '+response.status);
+  const gltf=await new GLTFLoader().parseAsync(await response.arrayBuffer(),new URL('.',url).href);
+  if(signal?.aborted){disposeGLTF(gltf.scene);throw new Error('GLB load cancelled');}
+  return prepareDumbbell(gltf);
 }
 
 // Orthographic camera maps the existing narrative's CSS-pixel coordinates to
@@ -56,8 +64,10 @@ export function applyActorPose(model, pose, view, baseWidth) {
   const scale=staticMode ? Math.min(view.width*.85,380)/baseWidth : view.actorWidth/baseWidth*state.scale*entry.scale;
   model.scale.setScalar(scale);
   const mouse=staticMode?0:Math.max(0,1-view.scroll/48);
-  model.rotation.set(.16+(pointer.x*mouse*Math.PI/180),.28+(pointer.y*mouse*Math.PI/180),staticMode?0:(state.rotation+entry.rotation)*Math.PI/180,'XYZ');
+  model.rotation.set(.16+((staticMode?0:state.tiltX||0)+pointer.x*mouse)*Math.PI/180,.28+((staticMode?0:state.yaw||0)+pointer.y*mouse)*Math.PI/180,staticMode?0:(state.rotation+entry.rotation)*Math.PI/180,'XYZ');
   model.position.set(staticMode?0:state.x+view.actorWidth/2-view.width/2,staticMode?0:view.height/2-state.y-view.actorHeight/2,staticMode?0:-state.depth*12);
+  const centerOffset=model.userData.localCenter.clone().multiplyScalar(scale).applyEuler(model.rotation);
+  model.position.sub(centerOffset);
   model.updateMatrixWorld(true);
   if(!staticMode && state.hero>0.5) {
     const bounds=new THREE.Box3().setFromObject(model);
@@ -72,16 +82,16 @@ export function applyActorPose(model, pose, view, baseWidth) {
 export function createDumbbellActor({stage,fallback,pose,getView,gsap,onFailure}) {
   let renderer, model, camera, scene, frame=0, resizeTimer=0, stopped=false, active=true, initialized=false;
   let renderSamples=0, renderCost=0, slowFrames=0, previousFrame=0;
-  const blend={value:0};let fade;
+  const blend={value:0};let fade;const loading=new AbortController();
   const report={renderer:'Three.js r180',frames:0,averageRenderMs:0,drawCalls:0,triangles:0,status:'loading'};
   function release() {
     cancelAnimationFrame(frame);frame=0;clearTimeout(resizeTimer);
-    fade?.kill();renderer?.domElement.remove();model?.userData.dispose();renderer?.dispose();
+    loading.abort();fade?.kill();renderer?.domElement.remove();model?.userData.dispose();renderer?.dispose();
   }
   function fail(reason) {
     if(stopped)return;
     stopped=true;report.status='fallback';
-    fallback.style.removeProperty('opacity');
+    fallback.style.removeProperty('display');fallback.style.removeProperty('opacity');
     release();removeListeners();onFailure?.(reason);
   }
   function resize() {
@@ -100,7 +110,7 @@ export function createDumbbellActor({stage,fallback,pose,getView,gsap,onFailure}
     renderer?.domElement.removeEventListener('webglcontextlost',onContextLost);
   }
   function draw() {
-    frame=0;if(stopped||!active||document.hidden)return;
+    frame=0;if(stopped||!active||!model||document.hidden)return;
     try {
       const view=getView(), started=performance.now();
       applyActorPose(model,pose,view,model.userData.baseWidth);
@@ -118,17 +128,17 @@ export function createDumbbellActor({stage,fallback,pose,getView,gsap,onFailure}
         }
       }
       previousFrame=started;report.averageRenderMs=renderSamples?renderCost/renderSamples:cost;
-      if(!initialized){
+      if(!initialized && (view.reduced || pose.state.opacity*pose.entry.opacity>.02)){
         initialized=true;report.status='ready';
         // Reveal only after a successful frame, never on import/load alone.
         fade=gsap.to(blend,{value:1,duration:.65,ease:'power2.out',onUpdate:()=>{
           renderer.domElement.style.opacity=String(blend.value);
           fallback.style.opacity=String(1-blend.value);
-        }});
+        },onComplete:()=>{if(!stopped)fallback.style.display='none';}});
       }
     }catch(error){fail(error.message);}
   }
-  function requestRender() { if(!stopped&&active&&!document.hidden&&!frame)frame=requestAnimationFrame(draw); }
+  function requestRender() { if(!stopped&&model&&active&&!document.hidden&&!frame)frame=requestAnimationFrame(draw); }
   try {
     renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power',preserveDrawingBuffer:false});
     renderer.setClearColor(0x000000,0);renderer.outputColorSpace=THREE.SRGBColorSpace;
@@ -136,11 +146,14 @@ export function createDumbbellActor({stage,fallback,pose,getView,gsap,onFailure}
     renderer.debug.onShaderError=()=>{throw new Error('WebGL shader compilation failed');};
     renderer.domElement.className='lp-object-canvas';renderer.domElement.setAttribute('aria-hidden','true');
     scene=new THREE.Scene();camera=new THREE.OrthographicCamera(-1,1,1,-1,.1,3000);camera.position.z=1000;
-    model=createHexDumbbell();
-    const box=new THREE.Box3().setFromObject(model);model.userData.baseWidth=box.max.x-box.min.x;
-    scene.add(model);
+    loadDumbbell(DUMBBELL_URL,loading.signal).then(loaded=>{
+      if(stopped){loaded.userData.dispose();return;}
+      model=loaded;scene.add(model);report.model=model.name;report.triangles=model.userData.triangles;
+      report.status=active?'loaded':'paused';requestRender();
+    }).catch(error=>{if(!stopped)fail(error.message);});
     const key=new THREE.DirectionalLight(0xffffff,4);key.position.set(-3,5,6);scene.add(key);
     const fill=new THREE.DirectionalLight(0xffffff,.5);fill.position.set(4,1,3);scene.add(fill);
+    const rim=new THREE.DirectionalLight(0xffffff,.65);rim.position.set(2,3,-5);scene.add(rim);
     scene.add(new THREE.AmbientLight(0xffffff,.12));
     renderer.domElement.addEventListener('webglcontextlost',onContextLost);
     addEventListener('resize',onResize,{passive:true});document.addEventListener('visibilitychange',onVisibility);
@@ -154,6 +167,6 @@ export function createDumbbellActor({stage,fallback,pose,getView,gsap,onFailure}
       else {cancelAnimationFrame(frame);frame=0;renderer.domElement.remove();report.status='paused';}
     },
     get diagnostics(){return {...report};},
-    dispose(){if(stopped)return;stopped=true;release();removeListeners();fallback.style.removeProperty('opacity');}
+    dispose(){if(stopped)return;stopped=true;release();removeListeners();fallback.style.removeProperty('display');fallback.style.removeProperty('opacity');}
   };
 }

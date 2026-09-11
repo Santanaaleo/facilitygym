@@ -66,6 +66,20 @@ if (menuButton && navigation) {
       gsap.set([actor,$('.lp-object-entry'),fallback],{clearProps:'transform,opacity,filter'});
     }
 
+    // All boxes and paths share SVG coordinates; matchMedia reverts these attributes.
+    if (!desktop) {
+      gsap.set('.business-connections', { attr:{ viewBox:'0 0 400 650' } });
+      const boxes = { supplier:[110,20,180,70], facility:[110,160,180,80], client:[110,560,180,70], stock:[15,370,170,70], drop:[215,370,170,70] };
+      Object.entries(boxes).forEach(([name,[x,y,width,height]]) => {
+        gsap.set(`.node-${name} rect`, { attr:{x,y,width,height} });
+        gsap.set(`.node-${name} text`, { attr:{x:x+width/2,y:y+height/2} });
+      });
+      const routes = { supplier:'M200 90 V160', client:'M290 200 H390 V595 H290', stem:'M200 240 V300', crossbar:'M100 300 H300', stock:'M100 300 V370', drop:'M300 300 V370' };
+      Object.entries(routes).forEach(([name,d]) => gsap.set(`.flow-${name}`, { attr:{d} }));
+      gsap.set('.branch-trunk', { attr:{d:'M200 240 V300'} });
+      gsap.set('.branch-fork', { attr:{d:'M100 370 V300 H300 V370'} });
+    }
+
     if (reduced) {
       number.textContent = '1.500';
       // No ScrollTrigger, pin or transform is constructed in this branch.
@@ -100,7 +114,7 @@ if (menuButton && navigation) {
     reveal.fromTo('#manifesto [data-reveal]', { clipPath:'inset(0 0 100% 0)', opacity:0 }, { clipPath:'inset(0 0 0% 0)', opacity:1, duration:1, stagger:.2, ease:'power3.out' });
     gsap.to('.lp-manifesto-inner', { y:-25, opacity:.15, scale:desktop ? .97 : 1, ease:'none', scrollTrigger:{ trigger:manifesto, start:() => manifestoPin ? manifestoPin.end : '60% top', end:() => manifestoPin ? manifestoPin.end + innerHeight*.6 : 'bottom top', scrub:.5 } });
     gsap.utils.toArray('[data-enter]', page).forEach(element => gsap.from(element, { opacity:0, x:-20, duration:1, ease:'power3.out', scrollTrigger:{ trigger:element, start:'top 85%', once:true } }));
-    gsap.fromTo('.audience-age', { xPercent:desktop ? -5 : -1 }, { xPercent:desktop ? 5 : 1, ease:'none', scrollTrigger:{ trigger:'#publico', start:'top bottom', end:'bottom top', scrub:desktop ? 1 : .3 } });
+    // The watermark has no GSAP transform: its reserved CSS band owns placement.
     gsap.fromTo('[data-audience]', { clipPath:'inset(0 0 100% 0)', opacity:0 }, { clipPath:'inset(0 0 0% 0)', opacity:1, duration:1.2, ease:'power3.out', scrollTrigger:{ trigger:'#publico', start:'top 65%', once:true } });
     const dock = $('.accessory-dock');
     gsap.fromTo(dock, { clipPath:'inset(0 0 100% 0)' }, { clipPath:'inset(0 0 0% 0)', duration:1, ease:'power3.out', scrollTrigger:{ trigger:'#acessorios', start:'top 85%', toggleActions:'play none none reverse' } });
@@ -109,26 +123,36 @@ if (menuButton && navigation) {
     const panels = gsap.utils.toArray('.mvv-panel', page);
     const paths = gsap.utils.toArray('.flow-path', page);
     const nodes = gsap.utils.toArray('.business-node', page);
-    gsap.set(paths, { strokeDasharray:1, strokeDashoffset:1 });
+    gsap.set(paths, { strokeDasharray:1, strokeDashoffset:1, autoAlpha:0 });
     gsap.set(nodes, { autoAlpha:0 });
     gsap.set('.business-explanation', { autoAlpha:0 });
     function diagramTimeline() {
       const tl = gsap.timeline({ defaults:{ ease:'none' } });
-      tl.set(paths, { strokeDasharray:1, strokeDashoffset:1 }, 0)
-        .set(nodes, { autoAlpha:0 }, 0)
-        .set('#handoff-line', { opacity:1 }, 0)
-        .set('.business-diagram', { scale:1, filter:'blur(0px)', opacity:1 }, 0)
-        .to('.node-supplier', { autoAlpha:1, duration:8 }, 0)
-        .to('#handoff-line', { opacity:.2, duration:8 }, 0)
-        .to('.flow-supplier', { strokeDashoffset:0, duration:16 }, 8)
-        .to('.node-facility', { autoAlpha:1, duration:6 }, 24)
-        .to('.flow-client', { strokeDashoffset:0, duration:16 }, 30)
-        .to('.node-client', { autoAlpha:1, duration:6 }, 46)
-        .to('.flow-stock', { strokeDashoffset:0, duration:14 }, 54)
-        .to('.node-stock', { autoAlpha:1, duration:6 }, 68)
-        .to('.flow-drop', { strokeDashoffset:0, duration:14 }, 74)
-        .to('.node-drop', { autoAlpha:1, duration:6 }, 88)
-        .to('.business-explanation', { autoAlpha:1, duration:6 }, 94);
+      tl.set(paths, { strokeDasharray:1, strokeDashoffset:1, autoAlpha:0 },0)
+        .set('.flow-supplier, .flow-client, .flow-stock, .flow-drop', { attr:{'marker-end':'none'} },0)
+        .set(nodes, { autoAlpha:0 },0)
+        .set('.business-diagram', { opacity:1 },0)
+        .to('.node-supplier', { autoAlpha:1, duration:10 },0);
+      const draw = (selector, at, duration, arrow=false) => {
+        tl.set(selector, { autoAlpha:1 },at)
+          .to(selector, { strokeDashoffset:0, duration },at)
+          // Solid final strokes eliminate dash seams at shared junctions.
+          .set(selector, { strokeDasharray:'none', strokeDashoffset:0 },at+duration);
+        if (arrow) tl.set(selector, { attr:{'marker-end':'url(#flow-arrow)'} },at+duration);
+      };
+      draw('.flow-supplier',10,15,true);
+      tl.to('.node-facility', { autoAlpha:1, duration:10 },25);
+      draw('.flow-client',35,15,true);
+      tl.to('.node-client', { autoAlpha:1, duration:8 },50);
+      draw('.flow-stem',58,6);
+      draw('.flow-crossbar',64,6);
+      draw('.flow-stock',70,4,true);
+      tl.to('.node-stock', { autoAlpha:1, duration:6 },74);
+      draw('.flow-drop',80,4,true);
+      tl.to('.node-drop', { autoAlpha:1, duration:6 },84)
+        .to('.business-explanation', { autoAlpha:1, duration:6 },84)
+        .addLabel('complete',90)
+        .to({}, { duration:10 },90); // Real hold: no rendered property changes.
       return tl;
     }
     if (desktop) {
@@ -137,11 +161,9 @@ if (menuButton && navigation) {
       gsap.set('.mvv-content', { autoAlpha:0 });
       gsap.set('.mvv-word', { autoAlpha:0, scale:.5, xPercent:-50, yPercent:-50, transformOrigin:'0 0' });
       gsap.set('.business-label', { autoAlpha:0 });
-      // Canonical supplier path is already at its final coordinates in the DOM.
-      // Only its parent transform changes; no second element is swapped into place.
-      gsap.set('.shared-line-pivot', { svgOrigin:'260 240', x:-170, y:-80, rotation:90, scaleX:0 });
+      gsap.set('#modelo', { autoAlpha:0 });
+      gsap.set('.mvv-guide', { scaleY:0, transformOrigin:'top' });
       const mvv = gsap.timeline({ defaults:{ ease:'none' } });
-      mvv.set('.shared-line-pivot', { svgOrigin:'260 240', x:-170, y:-80, rotation:90, scaleX:0 }, 0);
       const beats = [
         { at:0, peak:8, label:14, read:26, exit:33, end:38, side:-40 },
         { at:33, peak:41, label:47, read:59, exit:66, end:71, side:40 },
@@ -156,19 +178,19 @@ if (menuButton && navigation) {
           .fromTo(content, { x:b.side, autoAlpha:0 }, { x:0, autoAlpha:1, duration:b.read-b.label }, b.label)
           .to(panel, { autoAlpha:0, filter:`blur(${i===2 ? 8 : 6}px)`, scale:i===2 ? 1 : .96, duration:b.end-b.exit }, b.exit);
       });
-      mvv.to('.shared-line-pivot', { scaleX:300/140*.33, duration:25 }, 8)
-        .to('.shared-line-pivot', { scaleX:300/140*.66, duration:33 }, 33)
-        .to('.shared-line-pivot', { scaleX:300/140, duration:26 }, 66)
-        .to('#handoff-line', { strokeWidth:2, duration:4 }, 92)
-        .to('.shared-line-pivot', { x:0, y:0, rotation:0, scaleX:1, duration:4 }, 96);
+      mvv.to('.mvv-guide', { scaleY:1, duration:84 },8)
+        .to('.mvv-guide', { scaleY:0, autoAlpha:0, duration:4 },96);
       const diagram = diagramTimeline();
-      diagram.set('.shared-line-pivot', { x:0, y:0, rotation:0, scaleX:1 }, 0)
-        .to('.business-label', { autoAlpha:1, duration:8 }, 0)
-        .to('.business-diagram', { scale:.92, filter:'blur(5px)', opacity:.15, duration:3 }, 97);
+      diagram.to('.business-label', { autoAlpha:1, duration:8 },0);
       // A single clock and pin prevent two independent scrub smoothers from drifting.
-      const narrative = gsap.timeline({ scrollTrigger:{ id:'mvv-modelo', trigger:story, start:'top top', end:'+=3600', scrub:1, pin:true, anticipatePin:1, invalidateOnRefresh:true } });
+      const narrative = gsap.timeline({ onUpdate:() => {
+        // Hide descendants too: their autoAlpha can override inherited visibility.
+        $('#modelo').classList.toggle('is-model-active', narrative.time() >= 2600);
+      }, scrollTrigger:{ id:'mvv-modelo', trigger:story, start:'top top', end:'+=4200', scrub:1, pin:true, anticipatePin:1, invalidateOnRefresh:true } });
       narrative.addLabel('mvv',0).add(mvv.duration(2600),0)
-        .addLabel('handoff',2600).add(diagram.duration(1000),2600).addLabel('complete',3600);
+        .set('#proposito', { autoAlpha:0 },2600)
+        .set('#modelo', { autoAlpha:1 },2600)
+        .addLabel('modelo',2600).add(diagram.duration(1600),2600).addLabel('complete',4200);
     } else {
       panels.forEach(panel => gsap.from(panel, { opacity:0, duration:.8, ease:'power3.out', scrollTrigger:{ trigger:panel, start:'top 80%', once:true } }));
       // Complete once in 2.8s; no pin, no scrub, and no desktop exit fade.
@@ -204,11 +226,12 @@ if (menuButton && navigation) {
       const landAt=aStart+h*.25;
       const landedY=lineY-landAt-ah/2-ah*.4*dockScale;
       const center=(w-aw)/2, right=w-aw*.9;
-      const bottom=Math.max($('.lp-header').offsetHeight+24+Math.hypot(aw,ah)/2-ah/2,h-ah*.7);
-      const frame=(x,y,scale,rotation=0,depth=0,opacity=1,hero=0) => ({ x,y,scale,rotation:desktop?rotation:rotation*.12,depth,opacity,hero });
+      const heroRight=w-aw*.98;
+      const bottom=Math.max($('.lp-header').offsetHeight+24+Math.hypot(aw,ah)/2-ah/2,h-ah*(desktop?.8:.76));
+      const frame=(x,y,scale,rotation=0,depth=0,opacity=1,hero=0,tiltX=0,yaw=0) => ({ x,y,scale,rotation:desktop?rotation:rotation*.12,depth,opacity,hero,tiltX:desktop?tiltX:0,yaw:desktop?yaw:0 });
       const frames=[
-        [0,frame(right,bottom,1,-8,0,1,1)],
-        [Math.min(hero.offsetHeight*.7,mStart*.7),frame(right+(desktop?60:30),bottom-(desktop?80:40),.85,15,0,1,1)],
+        [0,frame(heroRight,bottom,1,-8,0,1,1)],
+        [Math.min(hero.offsetHeight*.7,mStart*.7),frame(heroRight+(desktop?60:30),bottom-(desktop?80:40),.85,15,0,1,1)],
         [mStart,frame(center,h*.45,.6,15,4)],
         [mEnd,frame(center+w*(desktop?.04:.02),h*.45,.6,45,4)],
         [mEnd+h*.55,frame(right,h*.6,.9,45)],
@@ -216,6 +239,7 @@ if (menuButton && navigation) {
         [top('#suplementacao')-h*.2,frame(-w*(desktop?.3:.15),h*.62,.5,-20)],
         [top('#suplementacao')+h*.55,frame(center,h*.6,.9,0)],
         [eStart,frame(center,h*.45,.9,0)],
+        [eStart+(eEnd-eStart)/2,frame(center,h*.45,desktop?1.15:.95,desktop?120:0,0,1,0,7,35)],
         [eEnd,frame(center,h*.45,desktop?1.4:1,desktop?240:0)],
         [aStart,frame(dockX,landedY-h*.16,.5,240,2)],
         [landAt,frame(dockX,landedY,dockScale,240,0)],
@@ -253,6 +277,7 @@ if (menuButton && navigation) {
       ScrollTrigger.removeEventListener('refresh',buildJourney);
       if (move) { hero.removeEventListener('pointermove',move); hero.removeEventListener('pointerleave',leave); }
       story.classList.remove('is-cinematic');
+      $('#modelo').classList.remove('is-model-active');
       stage.style.removeProperty('visibility');
       stage.classList.remove('is-persistent'); parent.insertBefore(stage,next);
       number.textContent='1.500';
