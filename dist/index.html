@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="FacilityGym — Luxury Performance. Performance, suplementação e equipamentos para o seu espaço.">
 <title>FacilityGym — Luxury Performance</title>
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=673202851016">
 <script src="vendor/gsap.min.js" defer></script>
 <script src="vendor/ScrollTrigger.min.js" defer></script>
 <script src="script.js" defer></script>
@@ -64,7 +64,7 @@
  <div class="lp-copy" data-enter><p class="lp-label">EQUIPAMENTOS</p><h2 id="equipment-title">FORÇA.<br>NO SEU ESPAÇO.</h2></div><p class="lp-equipment-note">Halteres e equipamentos compactos.<br>Possibilidades que cabem na sua rotina.</p>
 </section>
 <section class="lp-section lp-accessories" id="acessorios" aria-labelledby="accessories-title"><div class="accessory-dock" aria-hidden="true"><div class="dock-rule"></div></div><div class="lp-copy" data-enter><p class="lp-label">ACESSÓRIOS</p><h2 id="accessories-title">O detalhe<br>acompanha o ritmo.</h2><p>Cordas, elásticos e coqueteleiras para completar o treino e simplificar o dia.</p></div></section>
-<section class="lp-section lp-audience" id="publico" aria-labelledby="audience-title"><div class="audience-age" aria-hidden="true">20—40</div><div class="lp-copy audience-copy" data-audience><p class="lp-label">PARA QUEM ESCOLHE EVOLUIR</p><h2 id="audience-title">Seu treino.<br>Suas regras.</h2><p>Para pessoas de 20 a 40 anos que treinam em casa e valorizam liberdade, suplementação e praticidade. Entregas em todo o Brasil.</p></div></section>
+<section class="lp-section lp-audience" id="publico" aria-labelledby="audience-title"><div class="audience-age" aria-hidden="true"><span>20</span><span class="age-dash">—</span><span>40</span></div><div class="lp-copy audience-copy" data-audience><p class="lp-label">PARA QUEM ESCOLHE EVOLUIR</p><h2 id="audience-title">Seu treino.<br>Suas regras.</h2><p>Para pessoas de 20 a 40 anos que treinam em casa e valorizam liberdade, suplementação e praticidade. Entregas em todo o Brasil.</p></div></section>
 <div class="story-stage">
 <section class="mvv lp-section" id="proposito" aria-label="Missão, visão e valores">
  <div class="mvv-guide" aria-hidden="true"></div>
@@ -77,23 +77,23 @@
  <div class="business-diagram" role="img" aria-label="Fornecedor envia à FacilityGym, que atende o cliente por estoque próprio ou dropshipping.">
   <svg class="business-connections" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
    <defs><marker id="flow-arrow" viewBox="0 0 8 8" refX="8" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L8 4 L0 8 Z" fill="#bc9d60"/></marker></defs>
-   <path class="flow-path flow-supplier" d="M250 130 H390" pathLength="1" marker-end="url(#flow-arrow)"/>
-   <path class="flow-path flow-client" d="M610 130 H750" pathLength="1" marker-end="url(#flow-arrow)"/>
-   <defs><mask id="branch-reveal" maskUnits="userSpaceOnUse" x="0" y="0" width="1000" height="650">
-    <path class="flow-path flow-stem" d="M500 170 V280" pathLength="1"/>
-    <path class="flow-path flow-crossbar" d="M280 280 H720" pathLength="1"/>
-    <path class="flow-path flow-stock" d="M280 280 V360" pathLength="1"/>
-    <path class="flow-path flow-drop" d="M720 280 V360" pathLength="1"/>
+   <path class="flow-path flow-supplier" fill="none" stroke="#bc9d60" stroke-width="1.25" stroke-linecap="round" d="M250 130 H390" pathLength="1" marker-end="url(#flow-arrow)"/>
+   <path class="flow-path flow-client" fill="none" stroke="#bc9d60" stroke-width="1.25" stroke-linecap="round" d="M610 130 H750" pathLength="1" marker-end="url(#flow-arrow)"/>
+   <defs><mask id="branch-reveal" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1000" height="650">
+    <path class="flow-path flow-stem" fill="none" stroke="white" stroke-width="24" stroke-linecap="round" d="M500 170 V280" pathLength="1"/>
+    <path class="flow-path flow-crossbar" fill="none" stroke="white" stroke-width="24" stroke-linecap="round" d="M280 280 H720" pathLength="1"/>
+    <path class="flow-path flow-stock" fill="none" stroke="white" stroke-width="24" stroke-linecap="round" d="M280 280 V360" pathLength="1"/>
+    <path class="flow-path flow-drop" fill="none" stroke="white" stroke-width="24" stroke-linecap="round" d="M720 280 V360" pathLength="1"/>
    </mask></defs>
-   <g class="branch-geometry" mask="url(#branch-reveal)">
+   <g class="branch-geometry" fill="none" stroke="#bc9d60" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" mask="url(#branch-reveal)">
     <path class="branch-trunk" d="M500 170 V280"/>
     <path class="branch-fork" d="M280 360 V280 H720 V360" marker-start="url(#flow-arrow)" marker-end="url(#flow-arrow)"/>
    </g>
-   <g class="business-node node-supplier"><rect x="30" y="90" width="220" height="80"/><text x="140" y="130">FORNECEDOR</text></g>
-   <g class="business-node node-facility"><rect x="390" y="90" width="220" height="80"/><text x="500" y="130">FACILITYGYM</text></g>
-   <g class="business-node node-client"><rect x="750" y="90" width="220" height="80"/><text x="860" y="130">CLIENTE</text></g>
-   <g class="business-node node-stock"><rect x="150" y="360" width="260" height="80"/><text x="280" y="400">ESTOQUE PRÓPRIO</text></g>
-   <g class="business-node node-drop"><rect x="590" y="360" width="260" height="80"/><text x="720" y="400">DROPSHIPPING</text></g>
+   <g class="business-node node-supplier"><rect fill="#0c0d0e" stroke="#777366" stroke-width="1.25" x="30" y="90" width="220" height="80"/><text fill="#eeeee9" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle" x="140" y="130">FORNECEDOR</text></g>
+   <g class="business-node node-facility"><rect fill="#0c0d0e" stroke="#777366" stroke-width="1.25" x="390" y="90" width="220" height="80"/><text fill="#eeeee9" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle" x="500" y="130">FACILITYGYM</text></g>
+   <g class="business-node node-client"><rect fill="#0c0d0e" stroke="#777366" stroke-width="1.25" x="750" y="90" width="220" height="80"/><text fill="#eeeee9" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle" x="860" y="130">CLIENTE</text></g>
+   <g class="business-node node-stock"><rect fill="#0c0d0e" stroke="#777366" stroke-width="1.25" x="150" y="360" width="260" height="80"/><text fill="#eeeee9" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle" x="280" y="400">ESTOQUE PRÓPRIO</text></g>
+   <g class="business-node node-drop"><rect fill="#0c0d0e" stroke="#777366" stroke-width="1.25" x="590" y="360" width="260" height="80"/><text fill="#eeeee9" font-family="Arial,Helvetica,sans-serif" font-size="20" text-anchor="middle" dominant-baseline="middle" x="720" y="400">DROPSHIPPING</text></g>
   </svg>
  </div>
  <div class="business-explanation"><p>Comércio eletrônico com entregas, estoque próprio e envio direto pelo fornecedor. Uma equipe de três pessoas construindo a FacilityGym.</p><p class="lp-small">Empresa fictícia criada para um projeto escolar. Sede conceitual nas Ilhas Virgens Britânicas; público e vendas simuladas no Brasil.</p></div>
