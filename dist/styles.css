@@ -237,7 +237,7 @@ footer p { margin: 0; }
 .phase-one .accessory-dock { position:absolute; inset:0 0 0 auto; width:15vw; background:#292b2b; pointer-events:none; }
 .phase-one .dock-rule { position:absolute; top:66%; left:10%; width:80%; height:1px; background:#bc9d60; }
 .phase-one .lp-audience { overflow:hidden; isolation:isolate; padding-top:340px; padding-bottom:140px; min-height:115svh; }
-.phase-one .audience-age { position:absolute; right:4vw; top:50%; transform:translateY(-50%); font-size:clamp(160px,13vw,220px); font-weight:800; line-height:.8; letter-spacing:0; display:flex; align-items:center; gap:.06em; width:max-content; white-space:nowrap; color:#eeeee9; opacity:.045; pointer-events:none; user-select:none; z-index:0; }
+.phase-one .audience-age { position:absolute; right:clamp(24px,2vw,48px); top:50%; transform:translateY(-50%); font-size:clamp(160px,13vw,220px); font-weight:800; line-height:.8; letter-spacing:0; display:flex; align-items:center; gap:.06em; width:max-content; white-space:nowrap; color:#eeeee9; opacity:.045; pointer-events:none; user-select:none; z-index:0; }
 .phase-one .age-dash { flex:none; }
 .phase-one .audience-copy { position:relative; z-index:2; background:#101112; width:min(48%,660px); }
 .phase-one .story-stage { position:relative; background:#0c0d0e; }
