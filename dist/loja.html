@@ -32,11 +32,34 @@
  <section class="selection" id="selecao" aria-labelledby="selection-title">
   <div class="selection-heading"><p class="eyebrow">A SELEÇÃO FACILITYGYM</p><h2 id="selection-title">O essencial.<br>Com intenção.</h2><p>Para o treino, para a rotina,<br>para o seu espaço.</p></div>
   <div class="product-list">
-   <article class="product-preview" id="suplementos"><div class="product-space"><span>CREATINA</span><small>IMAGEM EM PREPARAÇÃO</small></div><div class="product-caption"><div><p class="eyebrow">SUPLEMENTOS</p><h3>Creatina FacilityGym</h3></div><span class="availability">Em breve</span></div></article>
-   <article class="product-preview" id="equipamentos"><div class="product-space"><span>FORÇA</span><small>SELEÇÃO EM PREPARAÇÃO</small></div><div class="product-caption"><div><p class="eyebrow">EQUIPAMENTOS</p><h3>Para treinar no seu espaço</h3></div><span class="availability">Em breve</span></div></article>
-   <article class="product-preview" id="acessorios"><div class="product-space"><span>RITMO</span><small>SELEÇÃO EM PREPARAÇÃO</small></div><div class="product-caption"><div><p class="eyebrow">ACESSÓRIOS</p><h3>Detalhes que acompanham</h3></div><span class="availability">Em breve</span></div></article>
+   <article class="product-preview" id="suplementos"><a class="product-entry" href="#precos" data-product="creatina" aria-label="Ver composição do preço: Creatina 300g"><div class="product-space"><span>CREATINA</span><small>FACILITYGYM / SUPLEMENTOS</small></div><div class="product-caption"><div><p class="eyebrow">SUPLEMENTOS</p><h3>Creatina 300g</h3></div><span class="product-price">R$ 89,90</span></div><span class="product-link">Entenda o preço <span aria-hidden="true">↗</span></span></a></article>
+   <article class="product-preview" id="whey"><a class="product-entry" href="#precos" data-product="whey" aria-label="Ver composição do preço: Whey Protein 900g"><div class="product-space"><span>WHEY</span><small>FACILITYGYM / SUPLEMENTOS</small></div><div class="product-caption"><div><p class="eyebrow">SUPLEMENTOS</p><h3>Whey Protein 900g</h3></div><span class="product-price">R$ 129,90</span></div><span class="product-link">Entenda o preço <span aria-hidden="true">↗</span></span></a></article>
+   <article class="product-preview" id="acessorios"><a class="product-entry" href="#precos" data-product="shaker" aria-label="Ver composição do preço: Shaker FacilityGym"><div class="product-space"><span>SHAKER</span><small>FACILITYGYM / ACESSÓRIOS</small></div><div class="product-caption"><div><p class="eyebrow">ACESSÓRIOS</p><h3>Shaker FacilityGym</h3></div><span class="product-price">R$ 39,90</span></div><span class="product-link">Entenda o preço <span aria-hidden="true">↗</span></span></a></article>
+   <article class="product-preview" id="equipamentos"><a class="product-entry" href="#precos" data-product="halteres" aria-label="Ver composição do preço: Kit Halteres"><div class="product-space"><span>FORÇA</span><small>FACILITYGYM / EQUIPAMENTOS</small></div><div class="product-caption"><div><p class="eyebrow">EQUIPAMENTOS</p><h3>Kit Halteres</h3></div><span class="product-price">R$ 189,90</span></div><span class="product-link">Entenda o preço <span aria-hidden="true">↗</span></span></a></article>
   </div>
  </section>
+ <section class="pricing" id="precos" aria-labelledby="pricing-title">
+  <div class="pricing-heading"><p class="eyebrow">POR TRÁS DA ESCOLHA</p><h2 id="pricing-title">Como pensamos o preço.</h2><p>Cada produto tem uma composição. Mostramos a nossa.</p></div>
+  <div class="pricing-layout">
+   <div class="price-selector" role="tablist" aria-label="Composição por produto">
+    <button type="button" role="tab" id="tab-creatina" aria-controls="price-anatomy" aria-selected="true" tabindex="0" data-product="creatina">Creatina 300g</button>
+    <button type="button" role="tab" id="tab-whey" aria-controls="price-anatomy" aria-selected="false" tabindex="-1" data-product="whey">Whey Protein 900g</button>
+    <button type="button" role="tab" id="tab-shaker" aria-controls="price-anatomy" aria-selected="false" tabindex="-1" data-product="shaker">Shaker FacilityGym</button>
+    <button type="button" role="tab" id="tab-halteres" aria-controls="price-anatomy" aria-selected="false" tabindex="-1" data-product="halteres">Kit Halteres</button>
+   </div>
+   <div class="price-anatomy" id="price-anatomy" role="tabpanel" aria-labelledby="tab-creatina" tabindex="0">
+    <div class="anatomy-heading"><h3 data-field="name">Creatina 300g</h3><span class="operation-label" data-field="operation">Estoque próprio</span></div>
+    <p class="sale-price"><span class="eyebrow">PREÇO DE VENDA</span><strong data-field="price">R$ 89,90</strong></p>
+    <div class="cost-bar" aria-hidden="true"><span style="flex-grow:38"></span><span style="flex-grow:12"></span><span style="flex-grow:4.5"></span><span style="flex-grow:5.4"></span><span style="flex-grow:30"></span></div>
+    <dl class="cost-values"><div><dt>Produto</dt><dd data-cost="0">R$ 38,00</dd></div><div><dt>Frete</dt><dd data-cost="1">R$ 12,00</dd></div><div><dt>Taxas</dt><dd data-cost="2">R$ 4,50</dd></div><div><dt>Impostos</dt><dd data-cost="3">R$ 5,40</dd></div><div><dt>Lucro</dt><dd data-cost="4">R$ 30,00</dd></div></dl>
+    <dl class="price-summary"><div><dt>Custo total</dt><dd data-field="total">R$ 59,90</dd></div><div><dt>Margem de lucro</dt><dd class="profit-margin" data-field="margin">33,4%</dd></div></dl>
+   </div>
+  </div>
+  <p class="price-note">Valores estimados para fins de demonstração do projeto.</p>
+  <p class="sr-only" id="price-announcement" aria-live="polite" aria-atomic="true"></p>
+ </section>
+ <section class="operations" aria-labelledby="operations-title"><p class="eyebrow">UMA OPERAÇÃO CONSCIENTE</p><h2 id="operations-title">Como operamos.</h2><p>Produtos de maior giro ficam em estoque próprio. Itens mais pesados ou com maior custo de armazenagem podem operar sob encomenda, reduzindo capital parado e mantendo a operação mais eficiente.</p></section>
+ <section class="store-closing" aria-labelledby="closing-title"><div class="gold-line" aria-hidden="true"></div><h2 id="closing-title">Conheça a FacilityGym</h2><a class="explore" href="index.html">SOBRE A EMPRESA <span aria-hidden="true">↗</span></a></section>
 </main>
 </body>
 </html>
