@@ -1,25 +1,42 @@
 <!doctype html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Loja demonstrativa FacilityGym." />
-    <title>FacilityGym | Loja</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body class="store-page">
-    <header class="site-header">
-      <a class="brand" href="index.html"><span class="monogram">FG</span><span>FACILITYGYM</span></a>
-      <a class="nav-cta" href="index.html">Sobre a empresa</a>
-    </header>
-    <main class="coming-soon">
-      <p class="eyebrow">SEGUNDA ETAPA</p>
-      <h1>Nossa loja<br /><span>está ganhando forma.</span></h1>
-      <p>Em breve, suplementos, acessórios e equipamentos estarão reunidos nesta experiência.</p>
-      <a class="button button-primary" href="index.html">Voltar à apresentação</a>
-    </main>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="FacilityGym — suplementação e equipamentos para o seu espaço.">
+<title>FacilityGym — Loja</title>
+<link rel="stylesheet" href="loja.css">
+<script type="module" src="loja.js"></script>
+</head>
+<body>
+<a class="skip" href="#conteudo">Pular para o conteúdo</a>
+<header class="store-header">
+ <a class="wordmark" href="loja.html" aria-label="FacilityGym — loja">FACILITY<span>GYM</span></a>
+ <nav aria-label="Navegação da loja"><a href="#selecao">Explorar produtos</a><a class="about" href="index.html">Sobre a empresa <span aria-hidden="true">↗</span></a></nav>
+</header>
+<main id="conteudo">
+ <section class="store-hero" aria-labelledby="store-title">
+  <div class="hero-copy">
+   <p class="eyebrow enter">FACILITYGYM / SUPLEMENTAÇÃO</p>
+   <h1 id="store-title" class="enter">SUA ROTINA.<br><span>MAIS FORTE.</span></h1>
+   <div class="gold-line enter" aria-hidden="true"></div>
+   <div class="hero-detail enter"><h2>Creatina FacilityGym</h2><p>Um novo capítulo na sua rotina de treino.<br>Conheça nossa seleção de suplementação.</p><a class="explore" href="#selecao">EXPLORAR A SELEÇÃO <span aria-hidden="true">↗</span></a></div>
+  </div>
+  <figure class="product-scene" aria-label="Visualização da creatina FacilityGym" data-state="waiting">
+   <div class="model-host"></div>
+   <div class="model-status" role="status"><span class="eyebrow">CREATINA / FACILITYGYM</span><p>Imagem do produto<br>em preparação.</p></div>
+   <figcaption><span>CREATINA</span><span>FACILITYGYM — LUXURY PERFORMANCE</span></figcaption>
+  </figure>
+ </section>
+ <nav class="categories" aria-label="Categorias"><span class="eyebrow">EXPLORE SEU RITMO</span><a href="#suplementos">Suplementos <span>↗</span></a><a href="#equipamentos">Equipamentos <span>↗</span></a><a href="#acessorios">Acessórios <span>↗</span></a></nav>
+ <section class="selection" id="selecao" aria-labelledby="selection-title">
+  <div class="selection-heading"><p class="eyebrow">A SELEÇÃO FACILITYGYM</p><h2 id="selection-title">O essencial.<br>Com intenção.</h2><p>Para o treino, para a rotina,<br>para o seu espaço.</p></div>
+  <div class="product-list">
+   <article class="product-preview" id="suplementos"><div class="product-space"><span>CREATINA</span><small>IMAGEM EM PREPARAÇÃO</small></div><div class="product-caption"><div><p class="eyebrow">SUPLEMENTOS</p><h3>Creatina FacilityGym</h3></div><span class="availability">Em breve</span></div></article>
+   <article class="product-preview" id="equipamentos"><div class="product-space"><span>FORÇA</span><small>SELEÇÃO EM PREPARAÇÃO</small></div><div class="product-caption"><div><p class="eyebrow">EQUIPAMENTOS</p><h3>Para treinar no seu espaço</h3></div><span class="availability">Em breve</span></div></article>
+   <article class="product-preview" id="acessorios"><div class="product-space"><span>RITMO</span><small>SELEÇÃO EM PREPARAÇÃO</small></div><div class="product-caption"><div><p class="eyebrow">ACESSÓRIOS</p><h3>Detalhes que acompanham</h3></div><span class="availability">Em breve</span></div></article>
+  </div>
+ </section>
+</main>
+</body>
 </html>
