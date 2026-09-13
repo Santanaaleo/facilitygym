@@ -30,13 +30,13 @@ export async function createCreatineActor(figure) {
     if(size.length()===0)throw new Error('Modelo sem volume.');
     gltf.scene.position.sub(center);
     const camera=new THREE.PerspectiveCamera(37,1,.01,1000);
-    const key=new THREE.DirectionalLight(0xffffff,4);key.position.set(-3,5,5);scene.add(key);
-    const fill=new THREE.DirectionalLight(0xffffff,.5);fill.position.set(4,1,4);scene.add(fill);
-    const rim=new THREE.DirectionalLight(0xffffff,.6);rim.position.set(3,4,-3);scene.add(rim);
-    scene.add(new THREE.HemisphereLight(0xffffff,0x202020,.4));
+    const key=new THREE.DirectionalLight(0xffffff,4.4);key.position.set(-4,3,5);scene.add(key);
+    const fill=new THREE.DirectionalLight(0xffffff,1);fill.position.set(4,1,4);scene.add(fill);
+    const rim=new THREE.DirectionalLight(0xffffff,.8);rim.position.set(3,3,-3);scene.add(rim);
+    scene.add(new THREE.HemisphereLight(0xffffff,0x202020,.5));
     renderer=new THREE.WebGLRenderer({alpha:true,antialias:true,powerPreference:'low-power'});
     renderer.setClearColor(0x000000,0);renderer.outputColorSpace=THREE.SRGBColorSpace;
-    renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=.9;
     renderer.domElement.setAttribute('aria-hidden','true');host.append(renderer.domElement);
     const pose={x:0,y:0,scroll:0},target={x:0,y:0,scroll:0};
     let fit=1;
